@@ -42,7 +42,7 @@ public class ScoreData : ScriptableObject
 
     public void ResetCurrentScore()
     {
-        CurrentScore = 0;
+        currentScore = 0;
     }
 
     public void ResetHighScore()

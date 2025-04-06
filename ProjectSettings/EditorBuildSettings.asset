@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ProjectAssets/Scenes/MainGameAccelerometer.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/ProjectAssets/Scenes/CharacterSelection.unity
+    guid: a7d3717558819034fb71a0ae52b1cc9e
+  - enabled: 1
+    path: Assets/ProjectAssets/Scenes/MainGameGyroscope.unity
+    guid: cc3e42535a7650845a7ce368178055c5
+  - enabled: 1
+    path: Assets/ProjectAssets/Scenes/Results.unity
+    guid: 1b3d4f8bc7c57e3419e70601b294e56d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

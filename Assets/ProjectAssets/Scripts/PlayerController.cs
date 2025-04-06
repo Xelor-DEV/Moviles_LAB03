@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
         shipTransform = transform;
         mainCamera = Camera.main;
         healthData.Initialize(spaceShipData.MaxHealth);
+        scoreData.ResetCurrentScore();
     }
 
     private void Start()

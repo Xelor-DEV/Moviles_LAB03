@@ -34,7 +34,6 @@ public class ResultsBoardManager : MonoBehaviour
 
     public void RestartGame()
     {
-        scoreData.ResetCurrentScore();
         SceneManager.LoadScene(mainSceneName);
     }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e04a8ecf1d416498b77f82eeef0b6f, type: 3}
   m_Name: Colors
   m_EditorClassIdentifier: 
-  primaryColor: {r: 0.4716981, g: 0.033398356, b: 0.028924897, a: 1}
-  secondaryColor: {r: 0.34950158, g: 0.9622642, b: 0.8814254, a: 1}
-  backgroundColor: {r: 0.5548515, g: 0.07843137, b: 0.7058824, a: 1}
-  textColor: {r: 0.8962264, g: 0.8234538, b: 0.2494215, a: 1}
+  textColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+  windowColor: {r: 0.055224285, g: 0.057669707, b: 0.16037738, a: 1}
+  buttonsColor: {r: 0.09758811, g: 0.10394007, b: 0.4056604, a: 1}
+  textButtonsColor: {r: 0.85882354, g: 0.85882354, b: 0.85882354, a: 1}

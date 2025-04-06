@@ -11,7 +11,7 @@ public class UIThemeApplier : MonoBehaviour
     [SerializeField] private Button[] buttons;
     [SerializeField] private TMP_Text[] textButtons;
 
-    void Start()
+    void Awake()
     {
         ApplyColor();
     }
