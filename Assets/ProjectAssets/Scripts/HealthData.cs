@@ -4,8 +4,8 @@ using System;
 [CreateAssetMenu(fileName = "Health Data", menuName = "ScriptableObjects/Player Data/Health Data", order = 1)]
 public class HealthData : ScriptableObject
 {
-    [SerializeField] private Action<int> onHealthChanged;
-    [SerializeField] private Action onDeath;
+    public Action<int> onHealthChanged;
+    public Action onDeath;
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
 
@@ -36,6 +36,18 @@ public class HealthData : ScriptableObject
             {
                 onDeath?.Invoke();
             }
+        }
+    }
+
+    public int MaxHealth
+    {
+        get
+        {
+            return maxHealth;
+        }
+        set
+        {
+            maxHealth = value;
         }
     }
 

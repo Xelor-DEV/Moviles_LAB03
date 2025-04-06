@@ -4,8 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Score Data", menuName = "ScriptableObjects/Player Data/Score Data", order = 1)]
 public class ScoreData : ScriptableObject
 {
-    [SerializeField] private Action<int> onScoreChanged;
-    [SerializeField] private Action<int> onHighScoreChanged;
+    public Action<int> onScoreChanged;
+    public Action<int> onHighScoreChanged;
     [SerializeField] private int currentScore;
     [SerializeField] private int highScore;
 

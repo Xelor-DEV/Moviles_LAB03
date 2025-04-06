@@ -1,14 +1,13 @@
 using UnityEngine;
 
+public enum SensorMode
+{
+    Auto,
+    Gyroscope,
+    Accelerometer
+}
 public class DeviceMotionController : MonoBehaviour
 {
-    public enum SensorMode 
-    { 
-        Auto, 
-        Gyroscope, 
-        Accelerometer 
-    }
-
     [Header("Sensor Config")]
     [SerializeField] private SensorData sensorData;
     [SerializeField] private SensorMode inputMode = SensorMode.Auto;
@@ -70,6 +69,7 @@ public class DeviceMotionController : MonoBehaviour
         }
 
         lastValidMode = currentMode;
+        sensorData.CurrentSensorMode = currentMode;
     }
 
     private void InitializeSensors()
@@ -126,8 +126,27 @@ public class DeviceMotionController : MonoBehaviour
 
     private void UpdateAccelerometerData()
     {
-        sensorData.RawAcceleration = Input.acceleration;
-        sensorData.ScaledAcceleration = Vector3.Scale(sensorData.RawAcceleration, accelerometerScale);
+        Vector3 rawAccel = Input.acceleration;
+
+        // Ajuste para orientación landscape
+        switch (Screen.orientation)
+        {
+            case ScreenOrientation.LandscapeLeft:
+                // Mapeo correcto para movimiento vertical natural
+                rawAccel = new Vector3(rawAccel.x, rawAccel.z, rawAccel.y);
+                break;
+
+            case ScreenOrientation.LandscapeRight:
+                rawAccel = new Vector3(-rawAccel.x, rawAccel.z, -rawAccel.y);
+                break;
+
+            case ScreenOrientation.PortraitUpsideDown:
+                rawAccel = new Vector3(-rawAccel.y, -rawAccel.x, rawAccel.z);
+                break;
+        }
+
+        sensorData.RawAcceleration = rawAccel;
+        sensorData.ScaledAcceleration = Vector3.Scale(rawAccel, accelerometerScale);
     }
 
     private void UpdateDebugValues()

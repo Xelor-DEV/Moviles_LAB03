@@ -3,13 +3,16 @@
 [CreateAssetMenu(fileName = "Sensor Data", menuName = "ScriptableObjects/Settings/Sensor Data", order = 1)]
 public class SensorData : ScriptableObject
 {
-    [Header("Acelerómetro")]
-    private Vector3 rawAcceleration;
-    private Vector3 scaledAcceleration;
+    [Header("Sensor Mode")]
+    [SerializeField] private SensorMode currentSensorMode;
 
-    [Header("Giroscopio")]
-    private Quaternion rawRotation;
-    private Vector3 scaledEulerRotation;
+    [Header("Accelerometer")]
+    [SerializeField] private Vector3 rawAcceleration;
+    [SerializeField] private Vector3 scaledAcceleration;
+
+    [Header("Gyroscope")]
+    [SerializeField] private Quaternion rawRotation;
+    [SerializeField] private Vector3 scaledEulerRotation;
 
     public Vector3 RawAcceleration
     {
@@ -56,6 +59,18 @@ public class SensorData : ScriptableObject
         set
         {
             scaledEulerRotation = value;
+        }
+    }
+
+    public SensorMode CurrentSensorMode
+    {
+        get
+        {
+            return currentSensorMode;
+        }
+        set
+        {
+            currentSensorMode = value;
         }
     }
 }
