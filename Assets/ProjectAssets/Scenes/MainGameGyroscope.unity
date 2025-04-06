@@ -1107,12 +1107,14 @@ MonoBehaviour:
   sensorData: {fileID: 11400000, guid: 08a6f7bfc137244428d9ba9dfe868d4e, type: 2}
   inputMode: 1
   accelerometerScale: {x: 1, y: 1, z: 1}
-  gyroscopeEulerScale: {x: 1, y: 1, z: -1}
+  gyroscopeEulerScale: {x: 1, y: 1.5, z: -1}
   currentMode: 0
   debugAcceleration: {x: 0, y: 0, z: 0}
   debugScaledAcceleration: {x: 0, y: 0, z: 0}
   debugGyroRotation: {x: 0, y: 0, z: 0, w: 0}
   debugScaledEuler: {x: 0, y: 0, z: 0}
+  gyroDeadzone: 0.1
+  invertGyroY: 1
 --- !u!4 &1120941110
 Transform:
   m_ObjectHideFlags: 0
@@ -1260,15 +1262,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf23ba38a5bff1419be65d1a38f6127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxTiltAngle: 30
   spaceShipData: {fileID: 11400000, guid: d6a43c1809bc95546bc4d93183c58037, type: 2}
   healthData: {fileID: 11400000, guid: 20402859a1f810b48873ba9d0f898c13, type: 2}
   scoreData: {fileID: 11400000, guid: a891f9ed218514545ab09549f3bf247a, type: 2}
   sensorData: {fileID: 11400000, guid: 08a6f7bfc137244428d9ba9dfe868d4e, type: 2}
-  movementSmoothing: 5
+  movementSmoothing: 12
   verticalLimit: 4
+  inputResponseCurve: 1.8
   projectilePrefab: {fileID: 7862099133741673896, guid: 4045f43eed4fbed4d81d450fa45d512b, type: 3}
   fireRate: 1.2
   scoreInterval: 1
+  gyroSensitivity: 0.8
+  gyroDeadzone: 0.25
 --- !u!58 &1291086873
 CircleCollider2D:
   m_ObjectHideFlags: 0

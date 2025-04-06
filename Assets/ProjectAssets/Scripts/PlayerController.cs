@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Gyro Controls")]
+    [SerializeField] private float maxTiltAngle = 30f;
+
     [Header("Dependencies")]
     [SerializeField] private SpaceShipData spaceShipData;
     [SerializeField] private HealthData healthData;
@@ -10,20 +13,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private SensorData sensorData;
 
     [Header("Movement Settings")]
-    [SerializeField] private float movementSmoothing = 5f;
+    [SerializeField] private float movementSmoothing = 6f;
     [SerializeField] private float verticalLimit = 4f;
-
+    [SerializeField] private float inputResponseCurve = 1.5f;
     [Header("Shooting Settings")]
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float fireRate = 0.5f;
     [SerializeField] private float scoreInterval = 1f;
 
+    [Header("Gyro Settings")]
+    [SerializeField] private float gyroSensitivity = 3f;
+    [SerializeField] private float gyroDeadzone = 0.05f;
+    [SerializeField] private bool invertGyro = false;
     private float nextFireTime;
 
     private float targetYPosition;
     private Transform shipTransform;
     private Camera mainCamera;
     private SpriteRenderer spriteRenderer;
+
+
 
     public HealthData HealthData
     {
@@ -83,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        sensorData.UpdateSensorData();
         HandleMovementInput();
         ApplyMovement();
     }
@@ -90,23 +100,29 @@ public class PlayerController : MonoBehaviour
     private void HandleMovementInput()
     {
         float input = GetSensorInput();
-        targetYPosition = targetYPosition + (input * spaceShipData.Handling * Time.deltaTime);
+
+        // Mapeo directo del input a la posición (ajusta el 5f según necesites)
+        targetYPosition += input * spaceShipData.Handling * Time.deltaTime * 5f;
+
+        // Limitar posición
         targetYPosition = Mathf.Clamp(targetYPosition, -verticalLimit, verticalLimit);
     }
 
     private float GetSensorInput()
     {
+
         switch (sensorData.CurrentSensorMode)
         {
-            case SensorMode.Gyroscope:
-                return sensorData.ScaledEulerRotation.y;
-
             case SensorMode.Accelerometer:
-                return sensorData.ScaledAcceleration.y;
+                return sensorData.ScaledAcceleration.y; // Usa el eje Y procesado
+
+            case SensorMode.Gyroscope:
+                return sensorData.ScaledEulerRotation.y / 90f; // Giroscopio normalizado
 
             default:
                 return 0f;
         }
+
     }
 
     private void ApplyMovement()
@@ -115,4 +131,5 @@ public class PlayerController : MonoBehaviour
         newPosition.y = Mathf.Lerp(newPosition.y, targetYPosition, movementSmoothing * Time.deltaTime);
         shipTransform.position = newPosition;
     }
+
 }

@@ -4,73 +4,120 @@
 public class SensorData : ScriptableObject
 {
     [Header("Sensor Mode")]
-    [SerializeField] private SensorMode currentSensorMode;
+    [SerializeField] private SensorMode currentSensorMode = SensorMode.Gyroscope;
 
-    [Header("Accelerometer")]
+
+    [Header("Accelerometer Settings")]
+    [SerializeField] private float accelerometerSensitivity = 12f;
+    [SerializeField] private float accelerometerDeadzone = 0.15f;
+    [SerializeField] private bool invertAccelerometer = false;  // Nuevo: para invertir controles
+    [SerializeField] private ScreenOrientation accelerometerOrientation = ScreenOrientation.LandscapeLeft;
+    [Header("Gyroscope Settings")]
+    [SerializeField] private float gyroSensitivity = 2f;
+    [SerializeField] private float gyroDeadzone = 0.15f;
+    [SerializeField] private bool invertGyro = false;
+
+    [Header("Runtime Data")]
     [SerializeField] private Vector3 rawAcceleration;
     [SerializeField] private Vector3 scaledAcceleration;
-
-    [Header("Gyroscope")]
     [SerializeField] private Quaternion rawRotation;
     [SerializeField] private Vector3 scaledEulerRotation;
 
+    // Propiedades públicas vinculadas a los campos serializados
     public Vector3 RawAcceleration
     {
-        get
-        {
-            return rawAcceleration;
-        }
-        set
-        {
-            rawAcceleration = value;
-        }
+        get => rawAcceleration;
+        set => rawAcceleration = value;
     }
 
     public Vector3 ScaledAcceleration
     {
-        get
-        {
-            return scaledAcceleration;
-        }
-        set
-        {
-            scaledAcceleration = value;
-        }
+        get => scaledAcceleration;
+        set => scaledAcceleration = value;
     }
 
     public Quaternion RawRotation
     {
-        get
-        {
-            return rawRotation;
-        }
-        set
-        {
-            rawRotation = value;
-        }
+        get => rawRotation;
+        set => rawRotation = value;
     }
 
     public Vector3 ScaledEulerRotation
     {
-        get
-        {
-            return scaledEulerRotation;
-        }
-        set
-        {
-            scaledEulerRotation = value;
-        }
+        get => scaledEulerRotation;
+        set => scaledEulerRotation = value;
     }
 
     public SensorMode CurrentSensorMode
     {
-        get
+        get => currentSensorMode;
+        set => currentSensorMode = value;
+    }
+
+    public void UpdateSensorData()
+    {
+        // Actualizar datos del acelerómetro
+        RawAcceleration = Input.acceleration;
+        ScaledAcceleration = ProcessAccelerometer(RawAcceleration);
+
+        // Actualizar datos del giroscopio si está disponible
+        if (SystemInfo.supportsGyroscope)
         {
-            return currentSensorMode;
+            RawRotation = Input.gyro.attitude;
+            ScaledEulerRotation = ProcessGyroscope(RawRotation.eulerAngles);
         }
-        set
+    }
+
+    private Vector3 ProcessAccelerometer(Vector3 input)
+    {
+        Vector3 orientedInput = input;
+        switch (accelerometerOrientation)
         {
-            currentSensorMode = value;
+            case ScreenOrientation.LandscapeLeft:
+                orientedInput = new Vector3(input.y, -input.x, input.z);
+                break;
+            case ScreenOrientation.LandscapeRight:
+                orientedInput = new Vector3(-input.y, input.x, input.z);
+                break;
+            case ScreenOrientation.Portrait:
+                orientedInput = new Vector3(input.x, input.y, input.z);
+                break;
+            case ScreenOrientation.PortraitUpsideDown:
+                orientedInput = new Vector3(-input.x, -input.y, input.z);
+                break;
         }
+
+        // Aplicar sensibilidad e inversión
+        Vector3 processed = orientedInput * accelerometerSensitivity;
+        if (invertAccelerometer) processed.y *= -1;
+
+        // Aplicar deadzone solo al eje Y (movimiento vertical)
+        if (Mathf.Abs(processed.y) < accelerometerDeadzone) processed.y = 0;
+
+        return processed;
+
+
+    }
+
+    private Vector3 ProcessGyroscope(Vector3 eulerAngles)
+    {
+        Vector3 normalizedAngles = new Vector3(
+            NormalizeAngle(eulerAngles.x),
+            NormalizeAngle(eulerAngles.y),
+            NormalizeAngle(eulerAngles.z)
+        );
+
+        float yRotation = normalizedAngles.y * gyroSensitivity;
+        if (invertGyro) yRotation *= -1;
+        if (Mathf.Abs(yRotation) < gyroDeadzone) yRotation = 0;
+
+        return new Vector3(0, yRotation, 0);
+    }
+
+    private float NormalizeAngle(float angle)
+    {
+        angle = angle % 360;
+        if (angle > 180) angle -= 360;
+        return angle;
     }
 }

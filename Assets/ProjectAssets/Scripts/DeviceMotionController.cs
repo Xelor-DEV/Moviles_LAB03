@@ -11,8 +11,8 @@ public class DeviceMotionController : MonoBehaviour
     [Header("Sensor Config")]
     [SerializeField] private SensorData sensorData;
     [SerializeField] private SensorMode inputMode = SensorMode.Auto;
-    [SerializeField] private Vector3 accelerometerScale = Vector3.one;
-    [SerializeField] private Vector3 gyroscopeEulerScale = new Vector3(1, 1, -1);
+    [SerializeField] private Vector3 accelerometerScale = new Vector3(1, 1.5f, 1);
+    [SerializeField] private Vector3 gyroscopeEulerScale = new Vector3(1, 1.5f, 1);
 
     [Header("Debug Values")]
     [SerializeField] private SensorMode currentMode;
@@ -21,15 +21,29 @@ public class DeviceMotionController : MonoBehaviour
     [SerializeField] private Quaternion debugGyroRotation;
     [SerializeField] private Vector3 debugScaledEuler;
 
+    [Header("Calibration")]
+    [SerializeField] private float gyroDeadzone = 0.1f;
+    [SerializeField] private bool invertGyroY = true; // Para ajustar dirección
+
     private Gyroscope deviceGyroscope;
     private bool gyroSupported;
     private SensorMode lastValidMode;
+    private Quaternion gyroBaseRotation = Quaternion.identity;
 
     private void Start()
     {
         gyroSupported = SystemInfo.supportsGyroscope;
         ValidateSensorMode();
         InitializeSensors();
+
+        if (currentMode == SensorMode.Gyroscope)
+        {
+            CalibrateGyro();
+        }
+    }
+    private void CalibrateGyro()
+    {
+        gyroBaseRotation = Quaternion.Inverse(Input.gyro.attitude);
     }
 
     private void ValidateSensorMode()
@@ -69,7 +83,7 @@ public class DeviceMotionController : MonoBehaviour
         }
 
         lastValidMode = currentMode;
-        sensorData.CurrentSensorMode = currentMode;
+        //sensorData.CurrentSensorMode = currentMode;
     }
 
     private void InitializeSensors()
@@ -114,14 +128,29 @@ public class DeviceMotionController : MonoBehaviour
 
     private void UpdateGyroData()
     {
-        if (deviceGyroscope.enabled == false)
+        if (!deviceGyroscope.enabled)
         {
             deviceGyroscope.enabled = true;
+            return;
         }
+        Quaternion rot = gyroBaseRotation * deviceGyroscope.attitude;
+        Vector3 euler = rot.eulerAngles;
 
-        sensorData.RawRotation = deviceGyroscope.attitude;
-        Vector3 euler = sensorData.RawRotation.eulerAngles;
-        sensorData.ScaledEulerRotation = Vector3.Scale(euler, gyroscopeEulerScale);
+        euler.x = NormalizeAngle(euler.x);
+        euler.y = NormalizeAngle(euler.y);
+        euler.z = NormalizeAngle(euler.z);
+        Vector3 scaled = Vector3.Scale(euler, gyroscopeEulerScale);
+
+        if (Mathf.Abs(scaled.y) < gyroDeadzone) scaled.y = 0;
+
+        // Invertir eje Y si es necesario
+        if (invertGyroY) scaled.y *= -1;
+
+       sensorData.RawRotation = rot;
+       sensorData.ScaledEulerRotation = scaled;
+       //
+       
+ 
     }
 
     private void UpdateAccelerometerData()
@@ -155,5 +184,12 @@ public class DeviceMotionController : MonoBehaviour
         debugScaledAcceleration = sensorData.ScaledAcceleration;
         debugGyroRotation = sensorData.RawRotation;
         debugScaledEuler = sensorData.ScaledEulerRotation;
+    }
+
+    private float NormalizeAngle(float angle)
+    {
+        angle = angle % 360;
+        if (angle > 180) angle -= 360;
+        return angle;
     }
 }
