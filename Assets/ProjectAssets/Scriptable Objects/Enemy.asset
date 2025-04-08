@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f916751c956d4ef499fe788a382d481e, type: 3}
-  m_Name: PlayerSpaceShipData
+  m_Script: {fileID: 11500000, guid: 161cd50e03951a4498cba1abcca15b51, type: 3}
+  m_Name: Enemy
   m_EditorClassIdentifier: 
-  shipSprite: {fileID: -7957553892111718586, guid: fb6c22435f35e4543954ef4393a698b1, type: 3}
-  maxHealth: 3
-  handling: 5
-  scoreSpeed: 10
-  projectileDamage: 1
-  fireRate: 0.5
+  speed: 3
+  damage: 1
+  score: 0

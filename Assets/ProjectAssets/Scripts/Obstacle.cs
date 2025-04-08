@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 
-public class Obstacle : MonoBehaviour
+public class Obstacle : DestructibleEntity
 {
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private HealthData healthTemplate;
-    [SerializeField] private int damageToPlayer = 1;
+    [SerializeField] private ScoreData scoreData;
+    [SerializeField] protected HealthData healthTemplate;
 
-    private int currentHealth;
-    private int maxHealth;
+    protected int currentHealth;
+    protected int maxHealth;
 
     public int CurrentHealth
     {
@@ -30,18 +29,27 @@ public class Obstacle : MonoBehaviour
                 currentHealth = value;
             }
 
+            scoreData.CurrentScore = scoreData.CurrentScore + attackerStats.Score;
+
             if (currentHealth <= 0)
             {
-                Destroy(gameObject);
+                ReturnToStaticPool();
             }
         }
     }
 
-    private void Start()
+    public override void Init()
     {
+        base.Init();
         maxHealth = healthTemplate.MaxHealth;
         currentHealth = maxHealth;
-        GetComponent<Rigidbody2D>().linearVelocity = Vector2.left * speed;
+    }
+
+
+
+    public void TakeDamage(int amount)
+    {
+        CurrentHealth = CurrentHealth - amount;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -49,18 +57,13 @@ public class Obstacle : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             HealthData playerHealth = other.GetComponent<PlayerController>().HealthData;
-            playerHealth.TakeDamage(damageToPlayer);
-            Destroy(gameObject);
+            playerHealth.TakeDamage(attackerStats.Damage);
+            ReturnToStaticPool();
         }
 
         if (other.CompareTag("DeleterObstacle"))
         {
-            Destroy(gameObject);
+            ReturnToStaticPool();
         }
-    }
-
-    public void TakeDamage(int amount)
-    {
-        CurrentHealth = CurrentHealth - amount;
     }
 }

@@ -17,3 +17,4 @@ MonoBehaviour:
   handling: 5
   scoreSpeed: 20
   projectileDamage: 1
+  fireRate: 1

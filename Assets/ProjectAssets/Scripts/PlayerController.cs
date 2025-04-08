@@ -17,9 +17,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float verticalLimit = 4f;
     [SerializeField] private float inputResponseCurve = 1.5f;
     [Header("Shooting Settings")]
-    [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float fireRate = 0.5f;
     [SerializeField] private float scoreInterval = 1f;
+    private bool isFiring;
 
     [Header("Gyro Settings")]
     [SerializeField] private float gyroSensitivity = 3f;
@@ -27,11 +27,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool invertGyro = false;
     private float nextFireTime;
 
+    [Header("Pooling")]
+    [SerializeField] private ObjectPoolDynamic projectilePool;
+
     private float targetYPosition;
     private Transform shipTransform;
     private Camera mainCamera;
     private SpriteRenderer spriteRenderer;
-
+    private Coroutine firingCoroutine;
 
 
     public HealthData HealthData
@@ -60,8 +63,36 @@ public class PlayerController : MonoBehaviour
         }
 
         StartCoroutine(ScoreUpdateRoutine());
-        StartCoroutine(AutoFireRoutine());
     }
+
+    public void StartFiring()
+    {
+        if (!isFiring)
+        {
+            isFiring = true;
+            firingCoroutine = StartCoroutine(FiringRoutine());
+        }
+    }
+
+    public void StopFiring()
+    {
+        isFiring = false;
+        if (firingCoroutine != null)
+        {
+            StopCoroutine(firingCoroutine);
+            firingCoroutine = null;
+        }
+    }
+
+    private IEnumerator FiringRoutine()
+    {
+        while (isFiring)
+        {
+            FireProjectile();
+            yield return new WaitForSeconds(spaceShipData.FireRate);
+        }
+    }
+
 
     private IEnumerator ScoreUpdateRoutine()
     {
@@ -70,18 +101,10 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(ScoreUpdateRoutine());
     }
 
-    private IEnumerator AutoFireRoutine()
-    {
-        FireProjectile();
-        yield return new WaitForSeconds(fireRate);
-        StartCoroutine(AutoFireRoutine());
-    }
-
     private void FireProjectile()
     {
-        GameObject projectile = Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
-        Projectile projectileScript = projectile.GetComponent<Projectile>();
-        projectileScript.Initialize(spaceShipData.ProjectileDamage);
+        GameObject projectile = projectilePool.GetObject(transform.position, projectilePool.ObjPrefab.transform.rotation);
+        projectile.GetComponent<Projectile>().Initialize(spaceShipData.ProjectileDamage);
     }
 
     private void CalculateMovementLimits()

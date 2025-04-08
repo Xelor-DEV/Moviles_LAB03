@@ -159,9 +159,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2f2156f40fe5074793f3b1be6e5f96c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  attackerStats: {fileID: 11400000, guid: fb063da9423925c48a83be1e24c05b75, type: 2}
+  scoreData: {fileID: 11400000, guid: a891f9ed218514545ab09549f3bf247a, type: 2}
   healthTemplate: {fileID: 11400000, guid: 986e9c70e1822734ca22b5ec1c287193, type: 2}
-  damageToPlayer: 1
 --- !u!212 &4220813981768816986
 SpriteRenderer:
   m_ObjectHideFlags: 0

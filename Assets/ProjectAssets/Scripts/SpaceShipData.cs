@@ -14,6 +14,10 @@ public class SpaceShipData : ScriptableObject
     [Header("Combat")]
     [SerializeField] private int projectileDamage = 1;
 
+    [Header("Firing")]
+    [SerializeField] private float fireRate = 0.5f;
+
+
     public Sprite ShipSprite
     {
         get
@@ -68,6 +72,18 @@ public class SpaceShipData : ScriptableObject
         set
         {
             projectileDamage = value;
+        }
+    }
+
+    public float FireRate
+    {
+        get
+        {
+            return fireRate;
+        }
+        set
+        {
+            fireRate = value;
         }
     }
 }

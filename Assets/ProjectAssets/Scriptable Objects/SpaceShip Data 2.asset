@@ -16,4 +16,5 @@ MonoBehaviour:
   maxHealth: 2
   handling: 8
   scoreSpeed: 30
-  projectileDamage: 1
+  projectileDamage: 2
+  fireRate: 1.5
