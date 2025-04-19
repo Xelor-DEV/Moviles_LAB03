@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - DeleterObstacle
   - Enemy
+  - ResultsCanvas
   layers:
   - Default
   - TransparentFX

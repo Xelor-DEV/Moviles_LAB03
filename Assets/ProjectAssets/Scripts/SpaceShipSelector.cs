@@ -59,7 +59,7 @@ public class SpaceShipSelector : MonoBehaviour
 
     public void StartGameWithAccelerometer()
     {
-        SceneManager.LoadScene(sceneWithAccelerometer);
+        SceneGlobalManager.Instance.LoadGameWithResults();
     }
 
     public void StartGameWithGyroscope()

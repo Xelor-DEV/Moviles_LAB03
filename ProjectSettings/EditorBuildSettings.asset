@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/ProjectAssets/Scenes/SplashScreen.unity
+    guid: 1a861d092202eb441a04b85b587510fd
+  - enabled: 1
     path: Assets/ProjectAssets/Scenes/MainMenu.unity
     guid: e633edca1ce81e749a8b960aa941e402
   - enabled: 1
@@ -14,9 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ProjectAssets/Scenes/MainGameAccelerometer.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
-    path: Assets/ProjectAssets/Scenes/MainGameGyroscope.unity
-    guid: cc3e42535a7650845a7ce368178055c5
   - enabled: 1
     path: Assets/ProjectAssets/Scenes/Results.unity
     guid: 1b3d4f8bc7c57e3419e70601b294e56d
